@@ -66,6 +66,10 @@ spec:
             - name: CHAIN_NAME
               value: {{ $chain.id }}
                     {{ include "devnet.defaultEvnVars" $chain | indent 12 }}
+            {{- range $env := $chain.env }}
+            - name: {{ $env.name }}
+              value: {{ $env.value | quote }}
+            {{- end }}
           resources: {{- include "devnet.node.resources" ( dict "node" $chain "context" $ ) | trim | nindent 12 }}
           volumeMounts:
             - mountPath: {{ $chain.home }}
@@ -90,6 +94,10 @@ spec:
               value: "{{ $chain.faucet.enabled }}"
             - name: METRICS
               value: "{{ $chain.metrics }}"
+            {{- range $env := $chain.env }}
+            - name: {{ $env.name }}
+              value: {{ $env.value | quote }}
+            {{- end }}
           command:
             - bash
             - "-c"
@@ -139,6 +147,10 @@ spec:
               value: /configs/keys.json
             - name: METRICS
               value: "{{ $chain.metrics }}"
+            {{- range $env := $chain.env }}
+            - name: {{ $env.name }}
+              value: {{ $env.value | quote }}
+            {{- end }}
           command:
             - bash
             - "-c"
